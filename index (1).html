@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Как общаться с ИИ, чтобы он тебя понял</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap">
+<style>
+:root{color-scheme:dark;--ink:#f1ecff;--muted:#b6abe3;--paper:#07041a;--card:#120a2e;--line:#33236f;--accent:#b88cff;--accent-ink:#14072f;--ok:#5ee3a8;--warn:#f5b95c;--bad:#ff8f9a;--tint:#1e1348;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#f1ecff;--muted:#b6abe3;--paper:#07041a;--card:#120a2e;--line:#33236f;--accent:#b88cff;--accent-ink:#14072f;--ok:#5ee3a8;--warn:#f5b95c;--bad:#ff8f9a;--tint:#1e1348}}
+:root[data-theme="dark"]{--ink:#f1ecff;--muted:#b6abe3;--paper:#07041a;--card:#120a2e;--line:#33236f;--accent:#b88cff;--accent-ink:#14072f;--ok:#5ee3a8;--warn:#f5b95c;--bad:#ff8f9a;--tint:#1e1348}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background-color:var(--paper);background-image:radial-gradient(1.2px 1.2px at 20px 30px,#fff 50%,transparent 100%),radial-gradient(1px 1px at 90px 120px,rgba(255,255,255,.85) 50%,transparent 100%),radial-gradient(1.6px 1.6px at 160px 60px,#fff 50%,transparent 100%),radial-gradient(1px 1px at 50px 170px,rgba(255,255,255,.7) 50%,transparent 100%),radial-gradient(1.3px 1.3px at 130px 200px,rgba(220,200,255,.9) 50%,transparent 100%),radial-gradient(ellipse at 15% 0%,#2b1070 0%,transparent 55%),radial-gradient(ellipse at 95% 100%,#44105f 0%,transparent 50%);background-size:220px 220px,310px 310px,370px 370px,270px 270px,430px 430px,auto,auto;background-attachment:fixed;color:var(--ink);font:400 17px/1.6 Manrope,"Segoe UI",system-ui,sans-serif}
+main{max-width:720px;margin:0 auto;padding:40px 20px 72px;position:relative}
+h1,.lead{position:relative}
+.net{position:absolute;top:12px;right:8px;width:190px;height:133px;color:var(--accent);opacity:.2;pointer-events:none}
+@media(max-width:560px){.net{width:120px;height:84px}}
+h1{font-size:clamp(30px,6vw,46px);line-height:1.12;font-weight:800;margin:0 0 12px;letter-spacing:-.02em}
+h2{font-size:24px;line-height:1.25;font-weight:800;margin:56px 0 10px}
+p{margin:0 0 12px}
+.lead{color:var(--muted);font-size:19px;max-width:60ch}
+.box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-top:22px}
+label{font-weight:700;display:block;margin-bottom:8px}
+textarea{width:100%;min-height:110px;resize:vertical;font:inherit;color:var(--ink);background:var(--paper);border:2px solid var(--line);border-radius:10px;padding:12px}
+textarea:focus,button:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.checks{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:8px}
+.checks li{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:10px;background:var(--tint)}
+.checks .m{flex:none;width:24px;height:24px;border-radius:50%;border:2px solid var(--muted);display:grid;place-items:center;font-weight:800;font-size:14px;line-height:1}
+.checks li.on{background:transparent;border:1px solid var(--ok)}
+.checks li.on .m{background:var(--ok);border-color:var(--ok);color:var(--accent-ink)}
+.checks small{display:block;color:var(--muted);font-size:14px;line-height:1.4}
+.bar{height:10px;border-radius:5px;background:var(--tint);margin:16px 0 6px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+#verdict{font-weight:700;margin:0}
+#alert{display:none;margin-top:12px;padding:12px;border-radius:10px;border:2px solid var(--bad);color:var(--bad);font-weight:700}
+.pair{display:grid;gap:12px;margin-top:14px}
+@media(min-width:620px){.pair{grid-template-columns:1fr 1fr}}
+.pair div{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--card)}
+.pair b{display:block;margin-bottom:4px}
+.pair .no b{color:var(--bad)}.pair .yes b{color:var(--ok)}
+ol.steps{padding-left:22px}ol.steps li{margin-bottom:8px}
+details{border-bottom:1px solid var(--line);padding:12px 0}
+summary{cursor:pointer;font-weight:700}
+details p{margin:8px 0 0;color:var(--muted)}
+button{font:inherit;font-weight:700;border:0;border-radius:10px;padding:10px 16px;background:var(--accent);color:var(--accent-ink);cursor:pointer;margin-top:10px}
+button.alt{background:var(--tint);color:var(--ink)}
+nav{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}nav a{padding:6px 12px;border-radius:99px;background:var(--tint);color:var(--ink);text-decoration:none;font-size:14px;font-weight:700}nav a:hover{outline:2px solid var(--accent)}
+.tl{list-style:none;margin:14px 0 0;padding:0 0 0 18px;border-left:3px solid var(--accent)}.tl li{margin-bottom:14px}.tl b{color:var(--accent)}
+.tpl{display:flex;gap:10px;align-items:flex-start;justify-content:space-between;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-top:10px}.tpl code{font:inherit;font-size:15px}.tpl button{margin:0;flex:none;padding:8px 12px;font-size:14px}
+.qz{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-top:12px}.qz p{margin:0 0 8px;font-weight:700}.qz button{margin:0 8px 0 0;background:var(--tint);color:var(--ink);border:2px solid transparent;transition:box-shadow .2s,background .2s}.qz button.sel{background:var(--accent);color:var(--accent-ink);box-shadow:0 0 0 3px var(--tint),0 0 16px var(--accent)}.qz .fb{margin:10px 0 0;font-weight:500;color:var(--muted)}.qz .fb.good{color:var(--ok)}.qz .fb.bad{color:var(--bad)}
+.st{display:grid;grid-template-columns:1fr;gap:4px;margin-top:14px}.st span{font-size:15px}.st .tr{height:12px;border-radius:6px;background:var(--tint);overflow:hidden}.st .tr i{display:block;height:100%;width:var(--w);background:var(--accent)}.st b{font-size:14px;color:var(--muted)}
+.sc{display:grid;gap:12px;margin-top:14px}@media(min-width:620px){.sc{grid-template-columns:1fr 1fr}}.sc div{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--card)}.sc strong{font-size:34px;line-height:1;display:block;margin-bottom:6px}
+.faq{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-top:10px}.faq b{display:block;margin-bottom:4px}.faq p{margin:0;color:var(--muted)}
+footer{margin-top:64px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:15px}
+</style>
+</head>
+<body>
+<main>
+<svg class="net" viewBox="0 0 200 140" aria-hidden="true" fill="none" stroke="currentColor"><g stroke-width="1"><path d="M20 30L100 20M20 30L100 55M20 30L100 90M20 70L100 20M20 70L100 55M20 70L100 90M20 70L100 125M20 110L100 55M20 110L100 90M20 110L100 125M100 20L180 45M100 20L180 95M100 55L180 45M100 55L180 95M100 90L180 45M100 90L180 95M100 125L180 45M100 125L180 95"/></g><g fill="currentColor" stroke="none"><circle cx="20" cy="30" r="5"/><circle cx="20" cy="70" r="5"/><circle cx="20" cy="110" r="5"/><circle cx="100" cy="20" r="5"/><circle cx="100" cy="55" r="5"/><circle cx="100" cy="90" r="5"/><circle cx="100" cy="125" r="5"/><circle cx="180" cy="45" r="6"/><circle cx="180" cy="95" r="6"/></g></svg>
+<h1>Как общаться с ИИ, чтобы он тебя понял</h1>
+<p class="lead">ИИ не понимает слова как человек: он подбирает самое вероятное продолжение текста. Поэтому ответ зависит от того, как ты спросил. Проверь свой запрос прямо здесь.</p>
+
+<nav aria-label="Разделы"><a href="#try">Проверка запроса</a><a href="#read">Как ИИ читает</a><a href="#err">Ошибки</a><a href="#history">История</a><a href="#tpl">Шаблоны</a><a href="#faq">Вопросы и ответы</a><a href="#poll">Наш опрос</a><a href="#terms">Термины</a></nav>
+<section class="box" id="try" aria-labelledby="tl">
+<label id="tl" for="q">Напиши запрос, который хочешь отправить ИИ</label>
+<textarea id="q" placeholder="Например: Объясни фотосинтез ученику 5 класса в пяти предложениях и приведи пример из жизни"></textarea>
+<div class="bar" aria-hidden="true"><i id="fill"></i></div>
+<p id="verdict" aria-live="polite">Пока запрос пустой.</p>
+<ul class="checks" id="list">
+<li data-k="task"><span class="m">✓</span><span>Есть задача<small>Что именно сделать: объясни, сравни, составь, переведи.</small></span></li>
+<li data-k="who"><span class="m">✓</span><span>Понятно, для кого и зачем<small>Например: для 5 класса, простыми словами, чтобы подготовиться к тесту.</small></span></li>
+<li data-k="fmt"><span class="m">✓</span><span>Указан формат или объём<small>Список, таблица, 5 предложений, коротко.</small></span></li>
+<li data-k="ex"><span class="m">✓</span><span>Есть пример или материал<small>Вставь свой текст или покажи, какой ответ тебе нужен.</small></span></li>
+</ul>
+<div id="alert" role="alert">В запросе похоже на личные данные: номер телефона, карты или пароль. Убери их: данные из чата могут сохраняться.</div>
+<button type="button" id="fillEx">Показать хороший пример</button>
+<button type="button" class="alt" id="clr">Очистить</button>
+</section>
+<p style="color:var(--muted);font-size:14px;margin-top:10px">Проверка простая: она ищет в запросе характерные слова и не заменяет твою голову.</p>
+
+<h2>Один вопрос, две формулировки</h2>
+<div class="pair">
+<div class="no"><b>Расплывчато</b>«Расскажи про фотосинтез». В ответе будут сложные термины и много лишнего: ИИ не знает, кому и сколько нужно.</div>
+<div class="yes"><b>Конкретно</b>«Объясни фотосинтез ученику 5 класса в пяти предложениях и приведи один пример». Ответ короткий и подходит по уровню.</div>
+</div>
+
+<h2 id="read">Как ИИ читает твой запрос</h2>
+<ol class="steps">
+<li>Делит текст на кусочки — токены. Это слова, части слов и знаки препинания.</li>
+<li>Превращает каждый токен в набор чисел. Слова со схожим смыслом получают близкие числа.</li>
+<li>Смотрит на соседние слова, чтобы понять контекст. Так «ядро клетки» и «ядро процессора» не путаются.</li>
+<li>Выбирает наиболее вероятное следующее слово и повторяет это снова и снова.</li>
+</ol>
+
+<h2 id="err">Почему ИИ ошибается</h2>
+<details><summary>Выдумывает факты</summary><p>Он умеет строить правдоподобные фразы, поэтому может уверенно назвать книгу или цитату, которых не существует.</p></details>
+<details><summary>Путает слова с несколькими значениями</summary><p>Без контекста слово «ядро» может означать клетку, Землю, орех или процессор.</p></details>
+<details><summary>Не знает новых событий</summary><p>Он знает только то, что было в обучающих текстах, если ему не подключён поиск.</p></details>
+<details><summary>Ошибается в расчётах</summary><p>Он предсказывает текст, а не вычисляет, поэтому в арифметике и сложной логике бывают сбои.</p></details>
+
+<h2>Что нельзя писать в чат</h2>
+<p>Пароли, коды из СМС, номера карт, домашний адрес, фото документов и чужие личные данные. То, что ты вводишь, может сохраняться по правилам сервиса.</p>
+
+<h2>Как проверить ответ</h2>
+<ol class="steps">
+<li>Найди то же самое минимум в двух надёжных источниках: учебник, энциклопедия, официальный сайт.</li>
+<li>Попроси ИИ написать, на чём основан ответ, и сам открой ссылки.</li>
+<li>Перепроверь цифры, даты и имена.</li>
+<li>Если ИИ не знает ответа, это нормально. Хуже, если он выдумал.</li>
+</ol>
+
+<h2 id="history">Как всё начиналось</h2>
+<ul class="tl">
+<li><b>1950.</b> Алан Тьюринг предлагает проверять «разумность» машины через разговор. Так появился тест Тьюринга.</li>
+<li><b>1956.</b> На семинаре в Дартмутском колледже впервые звучит термин «искусственный интеллект».</li>
+<li><b>1966.</b> Программа ELIZA изображает психотерапевта и просто подставляет ключевые слова в шаблоны. Но людям кажется, что она их понимает. Это называют эффектом Элизы.</li>
+<li><b>2011.</b> Появляется голосовой помощник Siri, а IBM Watson побеждает в телевикторине Jeopardy!.</li>
+<li><b>2017.</b> Исследователи Google описывают архитектуру «трансформер» с механизмом внимания. На ней построены современные языковые модели. В России появляется «Алиса».</li>
+<li><b>Ноябрь 2022.</b> ChatGPT становится доступен всем, и разговор с нейросетью превращается в привычку.</li>
+</ul>
+
+<h2 id="tpl">Готовые шаблоны запросов</h2>
+<p>Замени слова в скобках на свои и нажми «Копировать».</p>
+<div class="tpl"><code>Объясни тему «[тема]» ученику [класс] простыми словами в [число] предложениях и приведи один пример из жизни.</code><button type="button" class="alt cp">Копировать</button></div>
+<div class="tpl"><code>Составь план подготовки к контрольной по теме «[тема]» на [число] дней. Формат: таблица.</code><button type="button" class="alt cp">Копировать</button></div>
+<div class="tpl"><code>Проверь мой текст на ошибки и покажи исправления списком. Смысл не меняй: [текст]</code><button type="button" class="alt cp">Копировать</button></div>
+<div class="tpl"><code>Составь 5 вопросов с вариантами ответа по теме «[тема]» для самопроверки. Правильные ответы дай отдельно.</code><button type="button" class="alt cp">Копировать</button></div>
+<div class="tpl"><code>Сравни [А] и [Б] в таблице по 4 критериям и коротко объясни главную разницу.</code><button type="button" class="alt cp">Копировать</button></div>
+<div class="tpl"><code>Объясни, как ты пришёл к этому ответу, и подскажи, в каких источниках мне его проверить.</code><button type="button" class="alt cp">Копировать</button></div>
+
+<h2 id="faq">Частые вопросы и ответы</h2>
+<div class="faq"><b>Понимает ли ИИ меня по-настоящему?</b><p>Нет, не так, как человек. Он превращает текст в числа и подбирает самое вероятное продолжение. Поэтому ответы зависят от формулировки.</p></div>
+<div class="faq"><b>Почему на один вопрос ответы получаются разные?</b><p>В выборе следующего слова есть элемент случайности, поэтому каждый раз ответ может немного отличаться.</p></div>
+<div class="faq"><b>Всегда ли ИИ ищет ответ в интернете?</b><p>Нет. Обычно он создаёт ответ на основе того, чему научился. Поиск в интернете работает, только если он подключён.</p></div>
+<div class="faq"><b>Если ИИ отвечает уверенно, значит, он прав?</b><p>Нет. Он умеет строить правдоподобные фразы, поэтому уверенный тон ничего не гарантирует.</p></div>
+<div class="faq"><b>Что делать, если ответ не подошёл?</b><p>Объяснить, что именно не так, и уточнить задачу. В нашем эксперименте после уточнения оценка выросла до 5 из 5.</p></div>
+<div class="faq"><b>Можно ли делать домашнее задание с ИИ?</b><p>Как помощника: попросить объяснить тему, проверить текст, составить вопросы для самопроверки. Копировать готовые ответы не стоит: знаний не прибавится, а ошибки ИИ попадут в работу.</p></div>
+<div class="faq"><b>Можно ли вводить в чат личные данные?</b><p>Нет. Пароли, коды из СМС, номера карт, адрес и фото документов вводить нельзя: данные могут сохраняться по правилам сервиса.</p></div>
+<div class="faq"><b>Как понять, что ИИ выдумал ответ?</b><p>Проверить факты минимум в двух надёжных источниках. В нашем опыте с несуществующей книгой ИИ честно признал, что информации нет, но так бывает не всегда.</p></div>
+
+<h2 id="poll">Что показал наш опрос</h2>
+<p>Мы опросили 40 человек: школьников и взрослых.</p>
+<div class="st"><span>Пользуются ИИ</span><div class="tr"><i style="--w:85%"></i></div><b>85%</b></div>
+<div class="st"><span>Сталкивались с ошибками ИИ</span><div class="tr"><i style="--w:70%"></i></div><b>70%</b></div>
+<div class="st"><span>Вводят личные данные хотя бы иногда</span><div class="tr"><i style="--w:30%"></i></div><b>30%</b></div>
+<div class="st"><span>Знают, что такое «галлюцинации» ИИ</span><div class="tr"><i style="--w:25%"></i></div><b>25%</b></div>
+<div class="st"><span>Всегда проверяют ответы</span><div class="tr"><i style="--w:15%"></i></div><b>15%</b></div>
+<p style="margin-top:16px">Почти все пользуются ИИ, но проверяет ответы лишь каждый седьмой. Поэтому и нужна эта памятка.</p>
+<h2>Что показал эксперимент</h2>
+<p>Мы задавали чат-боту Алиса AI (Яндекс) одни и те же вопросы по-разному, 15.10.2026.</p>
+<div class="sc"><div><strong>3 из 5</strong>Расплывчатый запрос «Расскажи про фотосинтез»: сложные термины, нет примеров.</div><div><strong>5 из 5</strong>Запрос с аудиторией, объёмом и примером: ровно пять предложений и понятный пример.</div></div>
+
+<h2 id="terms">Словарик</h2>
+<details><summary>Промпт</summary><p>Запрос, который ты отправляешь ИИ.</p></details>
+<details><summary>Токен</summary><p>Небольшой кусочек текста: слово, часть слова или знак препинания. Модель читает текст токенами.</p></details>
+<details><summary>Нейросеть</summary><p>Математическая модель, устроенная по аналогии с сетью нервных клеток. Она состоит из слоёв, которые передают друг другу числа.</p></details>
+<details><summary>Большая языковая модель (LLM)</summary><p>Нейросеть, обученная на огромном количестве текстов. Её главная задача: предсказывать, какой фрагмент текста идёт дальше.</p></details>
+<details><summary>Галлюцинация</summary><p>Выдуманный, но убедительно звучащий ответ ИИ.</p></details>
+<details><summary>Контекстное окно</summary><p>Объём текста, который модель учитывает в одном разговоре.</p></details>
+<details><summary>Механизм внимания</summary><p>Часть трансформера, которая помогает определить, какие слова вокруг важны для понимания текущего слова.</p></details>
+
+<footer>Индивидуальный проект «Как искусственный интеллект понимает нас», Каримов Анвар, 9 класс, МАОУ «СОШ №7», г. Альметьевск, 2026 г.</footer>
+</main>
+<script>
+(function(){
+var q=document.getElementById('q'),fill=document.getElementById('fill'),vd=document.getElementById('verdict'),al=document.getElementById('alert');
+var items=[].slice.call(document.querySelectorAll('#list li'));
+var rx={
+task:/(объясни|расскажи|напиши|составь|сравни|переведи|придумай|реши|проверь|помоги|сделай|найди|подготовь|перечисли|что такое|как работает)/i,
+who:/(для\s+\S+\s*класс|класс|школьник|начинающ|ребён|ребен|простыми словами|для\s+(меня|людей|новичк)|чтобы|зачем|я\s+(учу|готов))/i,
+fmt:/(предложени|пункт|абзац|строк|шаг|списк|таблиц|коротко|кратко|в\s+виде|не\s+более|\d+\s*слов)/i,
+ex:/(например|пример|вот\s+текст|в\s+стиле|похож|образец|«[^»]{15,}»|"[^"]{15,}")/i
+};
+var risky=/(\+?\d[\d\s-]{9,}\d|\b\d{4}[\s-]?\d{4}[\s-]?\d{4}[\s-]?\d{4}\b|парол|cvv|код\s+из\s+смс)/i;
+function run(){
+var t=q.value.trim(),n=0;
+items.forEach(function(li){var ok=t.length>0&&rx[li.dataset.k].test(t);li.classList.toggle('on',ok);if(ok)n++});
+fill.style.width=(n*25)+'%';
+al.style.display=risky.test(t)?'block':'none';
+vd.textContent=!t?'Пока запрос пустой.':n===4?'Отлично: ИИ получит всё, что нужно.':n>=2?'Неплохо, но добавь то, что отмечено серым.':'Запрос расплывчатый: ИИ придётся угадывать.';
+}
+q.addEventListener('input',run);
+document.getElementById('fillEx').onclick=function(){q.value='Объясни фотосинтез ученику 5 класса в пяти предложениях. Например: как будто рассказываешь другу, и приведи один пример из жизни.';run();q.focus()};
+document.getElementById('clr').onclick=function(){q.value='';run();q.focus()};
+[].forEach.call(document.querySelectorAll('.cp'),function(b){b.onclick=function(){var t=b.previousElementSibling.textContent;function done(){var o=b.textContent;b.textContent='Скопировано';setTimeout(function(){b.textContent=o},1400)}try{navigator.clipboard.writeText(t).then(done,done)}catch(e){done()}}});
+run();
+})();
+</script>
+</body>
+</html>
