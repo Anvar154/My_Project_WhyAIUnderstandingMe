@@ -27,7 +27,7 @@ textarea{width:100%;min-height:110px;resize:vertical;font:inherit;color:var(--in
 textarea:focus,button:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .checks{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:8px}
 .checks li{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:10px;background:var(--tint)}
-.checks .m{flex:none;width:24px;height:24px;border-radius:50%;border:2px solid var(--muted);display:grid;place-items:center;font-weight:800;font-size:14px;line-height:1}
+.checks .m{flex:none;width:24px;height:24px;border-radius:50%;border:2px solid var(--muted);color:transparent;display:grid;place-items:center;font-weight:800;font-size:14px;line-height:1}
 .checks li.on{background:transparent;border:1px solid var(--ok)}
 .checks li.on .m{background:var(--ok);border-color:var(--ok);color:var(--accent-ink)}
 .checks small{display:block;color:var(--muted);font-size:14px;line-height:1.4}
@@ -168,7 +168,7 @@ footer{margin-top:64px;padding-top:18px;border-top:1px solid var(--line);color:v
 var q=document.getElementById('q'),fill=document.getElementById('fill'),vd=document.getElementById('verdict'),al=document.getElementById('alert');
 var items=[].slice.call(document.querySelectorAll('#list li'));
 var rx={
-task:/(объясни|расскажи|напиши|составь|сравни|переведи|придумай|реши|проверь|помоги|сделай|найди|подготовь|перечисли|что такое|как работает)/i,
+task:/(объясни|объясните|расскажи|расскажите|напиши|составь|сравни|переведи|придумай|реши|проверь|помоги|сделай|найди|подготовь|перечисли|дай|дайте|напомни|покажи|приведи|скажи|подскажи|опиши|посчитай|вычисли|выпиши|сократи|исправь|улучши|что такое|как работает|как найти|как решить|почему|зачем|сколько|\?)/i,
 who:/(для\s+\S+\s*класс|класс|школьник|начинающ|ребён|ребен|простыми словами|для\s+(меня|людей|новичк)|чтобы|зачем|я\s+(учу|готов))/i,
 fmt:/(предложени|пункт|абзац|строк|шаг|списк|таблиц|коротко|кратко|в\s+виде|не\s+более|\d+\s*слов)/i,
 ex:/(например|пример|вот\s+текст|в\s+стиле|похож|образец|«[^»]{15,}»|"[^"]{15,}")/i
@@ -179,7 +179,7 @@ var t=q.value.trim(),n=0;
 items.forEach(function(li){var ok=t.length>0&&rx[li.dataset.k].test(t);li.classList.toggle('on',ok);if(ok)n++});
 fill.style.width=(n*25)+'%';
 al.style.display=risky.test(t)?'block':'none';
-vd.textContent=!t?'Пока запрос пустой.':n===4?'Отлично: ИИ получит всё, что нужно.':n>=2?'Неплохо, но добавь то, что отмечено серым.':'Запрос расплывчатый: ИИ придётся угадывать.';
+vd.textContent=!t?'Пока запрос пустой.':n===4?'Отлично: ИИ получит всё, что нужно.':n>=2?'Неплохо, но добавь то, что не отмечено.':items[0].classList.contains('on')?'Задача понятна. Добавь, для кого и в каком виде нужен ответ, и он будет точнее.':'Непонятно, что именно сделать: ИИ придётся угадывать.';
 }
 q.addEventListener('input',run);
 document.getElementById('fillEx').onclick=function(){q.value='Объясни фотосинтез ученику 5 класса в пяти предложениях. Например: как будто рассказываешь другу, и приведи один пример из жизни.';run();q.focus()};
